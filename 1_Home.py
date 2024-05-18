@@ -5,11 +5,10 @@ st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout=
 
 @st.cache_data
 def load_data():
-    tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
+    tabela_parceiros = "teste" #pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
     return tabela_parceiros
 
 tabela_parceiros = load_data()
-st.session_state["df_parceiros"] = tabela_parceiros
 
 # Pegar dados de Parceiros
 # tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])

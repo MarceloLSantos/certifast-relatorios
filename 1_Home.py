@@ -3,37 +3,45 @@ import pandas as pd
 
 st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
+@st.cache_data
+def load_data():
+    tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
+    return tabela_parceiros
+
+tabela_parceiros = load_data()
+st.session_state["df_parceiros"] = tabela_parceiros
+
 # Pegar dados de Parceiros
-tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
+# tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
 
 # Pegar dados da planilha Revenda.xlsx
-colunas_vendas = ['Nome Vendedor',
-                  'Pedido',
-                  'Nome Cliente',
-                  'Dt.Pedido',
-                  'Dt.Verificação',
-                  'Desc.Produto',
-                  'Val. Faturamento',
-                  'Valor Tot. Comiss.']
-tabela_vendas = pd.read_excel('./dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
+# colunas_vendas = ['Nome Vendedor',
+#                   'Pedido',
+#                   'Nome Cliente',
+#                   'Dt.Pedido',
+#                   'Dt.Verificação',
+#                   'Desc.Produto',
+#                   'Val. Faturamento',
+#                   'Valor Tot. Comiss.']
+# tabela_vendas = pd.read_excel('./dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
 
-nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Desc. Agente Val.'].to_dict()
-tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_apelido)
+# nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Desc. Agente Val.'].to_dict()
+# tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_apelido)
 
 # tabela_vendas.set_index("Nome Vendedor", inplace=True)
 
 # Pegar dados da planilha Validacoes.xlsx
-colunas_validacoes = ['Desc. Agente Val.',
-                      'Pedido',
-                      'Nome Cliente',
-                      'Dt.Pedido',
-                      'Dt.Validação',
-                      'Produto',
-                      'Val. Bruto Soft',
-                      'Val. Bruto Hard',
-                      'Val. Comiss. Soft',
-                      'Val. Comiss. Hard']
-tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', decimal=',', usecols=colunas_validacoes, parse_dates=True)
+# colunas_validacoes = ['Desc. Agente Val.',
+#                       'Pedido',
+#                       'Nome Cliente',
+#                       'Dt.Pedido',
+#                       'Dt.Validação',
+#                       'Produto',
+#                       'Val. Bruto Soft',
+#                       'Val. Bruto Hard',
+#                       'Val. Comiss. Soft',
+#                       'Val. Comiss. Hard']
+# tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', decimal=',', usecols=colunas_validacoes, parse_dates=True)
 
 # tabela_validacoes.set_index("Desc. Agente Val.", inplace=True)
 
@@ -50,7 +58,7 @@ tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='
  
 
 st.title("CERTIFAST - RELATÓRIOS") 
-st.markdown("**REVENDAS** - " + filtro_agente)
+# st.markdown("**REVENDAS** - " + filtro_agente)
 # tabela_vendas_col_oculta = tabela_vendas[tabela_vendas['Nome Vendedor'] == filtro_agente]
 # st.dataframe(tabela_vendas_col_oculta.drop(columns='Nome Vendedor'))
 # st.markdown("**VALIDAÇÕES**")

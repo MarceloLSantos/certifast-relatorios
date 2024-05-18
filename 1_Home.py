@@ -5,11 +5,12 @@ st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout=
 
 @st.cache_data
 def load_data():
-    tabela_parceiros = "teste" #pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
+    tabela_parceiros = pd.read_excel('../dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
     return tabela_parceiros
 
 tabela_parceiros = load_data()
 
+st.title("CERTIFAST - RELATÓRIOS") 
 st.write(tabela_parceiros)
 
 # Pegar dados de Parceiros
@@ -57,8 +58,6 @@ st.write(tabela_parceiros)
 
 # st.sidebar.markdown("Desenvolvido por [Studio Cinco Soluções]")
  
-
-st.title("CERTIFAST - RELATÓRIOS") 
 # st.markdown("**REVENDAS** - " + filtro_agente)
 # tabela_vendas_col_oculta = tabela_vendas[tabela_vendas['Nome Vendedor'] == filtro_agente]
 # st.dataframe(tabela_vendas_col_oculta.drop(columns='Nome Vendedor'))

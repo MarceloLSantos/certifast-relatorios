@@ -42,8 +42,8 @@ tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='
 # print(tabela_repasses)
 
 #SIDEBAR
-logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
-st.image(logo, width=10)
+# logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
+# st.image(logo, width=10)
 filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Desc. Agente Val."])
 
 st.sidebar.markdown("Desenvolvido por [Studio Cinco Soluções]")

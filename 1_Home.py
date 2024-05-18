@@ -10,6 +10,8 @@ def load_data():
 
 tabela_parceiros = load_data()
 
+st.write(tabela_parceiros)
+
 # Pegar dados de Parceiros
 # tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
 

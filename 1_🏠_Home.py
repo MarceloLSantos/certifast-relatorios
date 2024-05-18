@@ -40,7 +40,7 @@ tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='
 # Pegar dados de tabela de Repasses
 # tabela_repasses = pd.read_excel('dados/Repasses.xlsx')
 # print(tabela_repasses)
-v
+
 #SIDEBAR
 logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
 st.image(logo, width=10)

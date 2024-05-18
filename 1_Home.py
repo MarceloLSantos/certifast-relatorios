@@ -44,18 +44,18 @@ tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='
 #SIDEBAR
 # logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
 # st.image(logo, width=10)
-filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Desc. Agente Val."])
+# filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Desc. Agente Val."])
 
-st.sidebar.markdown("Desenvolvido por [Studio Cinco Soluções]")
+# st.sidebar.markdown("Desenvolvido por [Studio Cinco Soluções]")
  
 
 st.title("CERTIFAST - RELATÓRIOS") 
 st.markdown("**REVENDAS** - " + filtro_agente)
-tabela_vendas_col_oculta = tabela_vendas[tabela_vendas['Nome Vendedor'] == filtro_agente]
-st.dataframe(tabela_vendas_col_oculta.drop(columns='Nome Vendedor'))
-st.markdown("**VALIDAÇÕES**")
-tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Desc. Agente Val.'] == filtro_agente]
-st.dataframe(tabela_validacoes_col_oculta.drop(columns='Desc. Agente Val.'))
+# tabela_vendas_col_oculta = tabela_vendas[tabela_vendas['Nome Vendedor'] == filtro_agente]
+# st.dataframe(tabela_vendas_col_oculta.drop(columns='Nome Vendedor'))
+# st.markdown("**VALIDAÇÕES**")
+# tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Desc. Agente Val.'] == filtro_agente]
+# st.dataframe(tabela_validacoes_col_oculta.drop(columns='Desc. Agente Val.'))
 # st.dataframe(tabela_validacoes)
 # st.dataframe(tabela_parceiros)
 # st.dataframe(tabela_repasses)

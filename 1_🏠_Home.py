@@ -4,7 +4,7 @@ import pandas as pd
 st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 # Pegar dados de Parceiros
-tabela_parceiros = pd.read_excel('../dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
+tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
 
 # Pegar dados da planilha Revenda.xlsx
 colunas_vendas = ['Nome Vendedor',
@@ -15,7 +15,7 @@ colunas_vendas = ['Nome Vendedor',
                   'Desc.Produto',
                   'Val. Faturamento',
                   'Valor Tot. Comiss.']
-tabela_vendas = pd.read_excel('../dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
+tabela_vendas = pd.read_excel('./dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
 
 nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Desc. Agente Val.'].to_dict()
 tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_apelido)
@@ -33,7 +33,7 @@ colunas_validacoes = ['Desc. Agente Val.',
                       'Val. Bruto Hard',
                       'Val. Comiss. Soft',
                       'Val. Comiss. Hard']
-tabela_validacoes = pd.read_excel('../dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', decimal=',', usecols=colunas_validacoes, parse_dates=True)
+tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', decimal=',', usecols=colunas_validacoes, parse_dates=True)
 
 # tabela_validacoes.set_index("Desc. Agente Val.", inplace=True)
 

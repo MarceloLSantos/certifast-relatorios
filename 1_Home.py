@@ -43,7 +43,7 @@ tabela_repasses = pd.read_excel('dados/Repasses.xlsx')
 # print(tabela_repasses)
 
 #SIDEBAR
-filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Desc. Agente Val."])
+# filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Desc. Agente Val."])
 
 logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
 st.image(logo, width=250)
@@ -51,14 +51,14 @@ st.image(logo, width=250)
 st.divider()
 
 # TABELA EMISSOES
-tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Desc. Agente Val.'] == filtro_agente]
+tabela_validacoes_col_oculta = tabela_validacoes #[tabela_validacoes['Desc. Agente Val.'] == filtro_agente]
 tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Desc. Agente Val.')
 total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
 tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
 # tabela_validacoes_col_oculta.reset_index()
 
 # TABELA VENDAS
-tabela_vendas_col_oculta = tabela_vendas[tabela_vendas['Nome Vendedor'] == filtro_agente]
+tabela_vendas_col_oculta = tabela_vendas #[tabela_vendas['Nome Vendedor'] == filtro_agente]
 tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
 total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
 tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
@@ -151,11 +151,3 @@ col6.markdown('<p class="small-font-bold">Pagar/Receber</p>', unsafe_allow_html=
 col7.markdown('<p class="small-font-bold color-red">R$ {:,.2f}</p>'.format(contabilidade), unsafe_allow_html=True)
 col8.markdown('<p class="small-font-bold color-red">R$ {:,.2f}</p>'.format(imposto), unsafe_allow_html=True)
 col9.markdown('<p class="small-font-bold color-green">R$ {:,.2f}</p>'.format(total_receber), unsafe_allow_html=True)
-
-
-st.divider()
-st.markdown("**EXTRATO DE EMISSÕES**")
-st.write(tabela_validacoes_col_oculta)
-st.divider()
-st.markdown("**EXTRATO DE VENDAS**")
-st.write(tabela_vendas_col_oculta)

@@ -1,17 +1,13 @@
+from pathlib import Path
 import streamlit as st
 import pandas as pd
 
+pasta_dados = Path(__file__).parents[1] / 'dados'
+
 st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
-@st.cache_data
-def load_data():
-    tabela_parceiros = pd.read_excel('dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
-    return tabela_parceiros
-
-tabela_parceiros = load_data()
-
 # Pegar dados de Parceiros
-tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
+tabela_parceiros = pd.read_excel(pasta_dados / 'Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
 
 # Pegar dados da planilha Revenda.xlsx
 colunas_vendas = ['Nome Vendedor',
@@ -22,7 +18,7 @@ colunas_vendas = ['Nome Vendedor',
                   'Desc.Produto',
                   'Val. Faturamento',
                   'Valor Tot. Comiss.']
-tabela_vendas = pd.read_excel('./dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
+tabela_vendas = pd.read_excel(pasta_dados / '012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
 tabela_vendas.index = range(1, len(tabela_vendas)+1)
 
 nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Desc. Agente Val.'].to_dict()
@@ -41,7 +37,7 @@ colunas_validacoes = ['Desc. Agente Val.',
                       'Val. Bruto Hard',
                       'Val. Comiss. Soft',
                       'Val. Comiss. Hard']
-tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
+tabela_validacoes = pd.read_excel(pasta_dados / '012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
 # tabela_validacoes.style.format(precision=3, thousands=".", decimal=",").format_index(str.upper, axis=1)
 tabela_validacoes.index = range(1, len(tabela_validacoes)+1)
 

@@ -4,7 +4,27 @@ import pandas as pd
 st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 # Pegar dados de Parceiros
-tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
+colunas_parceiros = ['Nome Vendedor',
+                     'Nome Validador',
+                     'COMISSAO','% Venda',
+                     '% Software',
+                     '% Hardware',
+                     'E-MAIL']
+tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=colunas_parceiros)
+
+# Pegar dados da planilha Validacoes.xlsx
+colunas_validacoes = ['Desc. Agente Val.',
+                      'Pedido',
+                      'Nome Cliente',
+                      'Dt.Pedido',
+                      'Dt.Validação',
+                      'Produto',
+                      'Val. Bruto Soft',
+                      'Val. Bruto Hard',
+                      'Val. Comiss. Soft',
+                      'Val. Comiss. Hard']
+tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
+tabela_validacoes.index = range(1, len(tabela_validacoes)+1)
 
 # Pegar dados da planilha Revenda.xlsx
 colunas_vendas = ['Nome Vendedor',
@@ -23,27 +43,12 @@ tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_
 
 # tabela_vendas.set_index("Nome Vendedor", inplace=True)
 
-# Pegar dados da planilha Validacoes.xlsx
-colunas_validacoes = ['Desc. Agente Val.',
-                      'Pedido',
-                      'Nome Cliente',
-                      'Dt.Pedido',
-                      'Dt.Validação',
-                      'Produto',
-                      'Val. Bruto Soft',
-                      'Val. Bruto Hard',
-                      'Val. Comiss. Soft',
-                      'Val. Comiss. Hard']
-tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
-# tabela_validacoes.style.format(precision=3, thousands=".", decimal=",").format_index(str.upper, axis=1)
-tabela_validacoes.index = range(1, len(tabela_validacoes)+1)
-
 # Pegar dados de tabela de Repasses
 tabela_repasses = pd.read_excel('dados/Repasses.xlsx')
 # print(tabela_repasses)
 
 #SIDEBAR
-# filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Desc. Agente Val."])
+# filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Nome Validador"])
 
 logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
 st.image(logo, width=250)
@@ -51,8 +56,8 @@ st.image(logo, width=250)
 st.divider()
 
 # TABELA EMISSOES
-tabela_validacoes_col_oculta = tabela_validacoes #[tabela_validacoes['Desc. Agente Val.'] == filtro_agente]
-tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Desc. Agente Val.')
+tabela_validacoes_col_oculta = tabela_validacoes #[tabela_validacoes['Nome Validador'] == filtro_agente]
+tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
 total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
 tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
 # tabela_validacoes_col_oculta.reset_index()

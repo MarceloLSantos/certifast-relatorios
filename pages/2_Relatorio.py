@@ -4,24 +4,13 @@ import pandas as pd
 st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 # Pegar dados de Parceiros
-tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=['Nome Vendedor','Desc. Agente Val.','COMISSAO','% Venda','% Software','% Hardware','E-MAIL'])
-
-# Pegar dados da planilha Revenda.xlsx
-colunas_vendas = ['Nome Vendedor',
-                  'Pedido',
-                  'Nome Cliente',
-                  'Dt.Pedido',
-                  'Dt.Verificação',
-                  'Desc.Produto',
-                  'Val. Faturamento',
-                  'Valor Tot. Comiss.']
-tabela_vendas = pd.read_excel('./dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
-tabela_vendas.index = range(1, len(tabela_vendas)+1)
-
-nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Desc. Agente Val.'].to_dict()
-tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_apelido)
-
-# tabela_vendas.set_index("Nome Vendedor", inplace=True)
+colunas_parceiros = ['Nome Vendedor',
+                     'Nome Validador',
+                     'COMISSAO','% Venda',
+                     '% Software',
+                     '% Hardware',
+                     'E-MAIL']
+tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=colunas_parceiros)
 
 # Pegar dados da planilha Validacoes.xlsx
 colunas_validacoes = ['Desc. Agente Val.',
@@ -35,15 +24,44 @@ colunas_validacoes = ['Desc. Agente Val.',
                       'Val. Comiss. Soft',
                       'Val. Comiss. Hard']
 tabela_validacoes = pd.read_excel('./dados/012024-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
-# tabela_validacoes.style.format(precision=3, thousands=".", decimal=",").format_index(str.upper, axis=1)
+tabela_validacoes.rename(columns={'Desc. Agente Val.': 'Nome Validador'}, inplace = True)
+
+# Mescla com tabela parceiros para calcular percentuais de comissões
+tabela_validacoes = tabela_validacoes.merge(tabela_parceiros, on='Nome Validador')
+tabela_validacoes['Val. Comiss. Soft'] = tabela_validacoes['Val. Bruto Soft'] * tabela_validacoes['% Software']
+tabela_validacoes['Val. Comiss. Hard'] = tabela_validacoes['Val. Bruto Hard'] * tabela_validacoes['% Hardware']
+
+# Dropa colunas mescladas
+drop_colunas = ['Nome Vendedor',
+                'COMISSAO','% Venda',
+                '% Software',
+                '% Hardware',
+                'E-MAIL']
+tabela_validacoes = tabela_validacoes.drop(columns=drop_colunas)
+
+# Redefine indice incremental
 tabela_validacoes.index = range(1, len(tabela_validacoes)+1)
 
-# Pegar dados de tabela de Repasses
-tabela_repasses = pd.read_excel('dados/Repasses.xlsx')
-# print(tabela_repasses)
+# Pegar dados da planilha Revenda.xlsx
+colunas_vendas = ['Nome Vendedor',
+                  'Pedido',
+                  'Nome Cliente',
+                  'Dt.Pedido',
+                  'Dt.Verificação',
+                  'Desc.Produto',
+                  'Val. Faturamento',
+                  'Valor Tot. Comiss.']
+tabela_vendas = pd.read_excel('./dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
+tabela_vendas.index = range(1, len(tabela_vendas)+1)
+
+nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Nome Validador'].to_dict()
+tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_apelido)
+
+# Pegar dados da planilha Repasses.xlsx
+tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
 #SIDEBAR
-filtro_agente = st.sidebar.selectbox('Agente', tabela_parceiros['Desc. Agente Val.'])
+filtro_agente = st.sidebar.selectbox('Agente', tabela_parceiros['Nome Validador'])
 
 logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
 st.image(logo, width=250)
@@ -51,8 +69,8 @@ st.image(logo, width=250)
 st.divider()
 
 # TABELA EMISSOES
-tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Desc. Agente Val.'] == filtro_agente]
-tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Desc. Agente Val.')
+tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]
+tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
 total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
 tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
 # tabela_validacoes_col_oculta.reset_index()
@@ -152,10 +170,13 @@ col7.markdown('<p class="small-font-bold color-red">R$ {:,.2f}</p>'.format(conta
 col8.markdown('<p class="small-font-bold color-red">R$ {:,.2f}</p>'.format(imposto), unsafe_allow_html=True)
 col9.markdown('<p class="small-font-bold color-green">R$ {:,.2f}</p>'.format(total_receber), unsafe_allow_html=True)
 
-
 st.divider()
 st.markdown("**EXTRATO DE EMISSÕES**")
-st.write(tabela_validacoes_col_oculta)
+st.dataframe(tabela_validacoes_col_oculta.style.format({'Val. Bruto Soft': 'R$ {:,.2f}',
+                                                        'Val. Bruto Hard': 'R$ {:,.2f}',
+                                                        'Val. Comiss. Soft': 'R$ {:,.2f}',
+                                                        'Val. Comiss. Hard': 'R$ {:,.2f}'}))
 st.divider()
 st.markdown("**EXTRATO DE VENDAS**")
-st.write(tabela_vendas_col_oculta)
+st.dataframe(tabela_vendas_col_oculta.style.format({'Val. Faturamento': 'R$ {:,.2f}',
+                                                    'Valor Tot. Comiss.': 'R$ {:,.2f}'}))

@@ -165,7 +165,7 @@ col2.markdown('<p class="sub-header color-red">FECHAMENTO DO MÊS</p>', unsafe_a
 col4.markdown('<p class="small-font-bold">Contabilidade</p>', unsafe_allow_html=True)
 col5.markdown('<p class="small-font-bold">Imposto</p>', unsafe_allow_html=True)
 col6.markdown('<p class="small-font-bold">Pagar/Receber</p>', unsafe_allow_html=True)
- 
+
 col7.markdown('<p class="small-font-bold color-red">R$ {:,.2f}</p>'.format(contabilidade), unsafe_allow_html=True)
 col8.markdown('<p class="small-font-bold color-red">R$ {:,.2f}</p>'.format(imposto), unsafe_allow_html=True)
 col9.markdown('<p class="small-font-bold color-green">R$ {:,.2f}</p>'.format(total_receber), unsafe_allow_html=True)

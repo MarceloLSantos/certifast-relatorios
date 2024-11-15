@@ -89,19 +89,19 @@ total_receber = total_comissoes - contabilidade - imposto
 st.markdown('''
 <style>
 .small-font-light {
-    font-size: 16px !important;
+    font-size: 18px !important;
     font-weight: light;
     text-align: center;
 }
             
 .small-font-bold {
-    font-size: 16px !important;
+    font-size: 18px !important;
     font-weight: bold;
     text-align: center;
 }
             
 .sub-header {
-    font-size:20px !important;
+    font-size:22px !important;
     font-weight: bold;
     text-align: center;
 }

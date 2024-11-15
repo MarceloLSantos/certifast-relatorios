@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
+# st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 # Pegar dados de Parceiros
 colunas_parceiros = ['Nome Vendedor',
@@ -61,12 +61,11 @@ tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_
 tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
 #SIDEBAR
-filtro_agente = st.sidebar.selectbox('Agente', tabela_parceiros['Nome Validador'])
+with st.sidebar:
+    logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
+    st.image(logo, width=250)
 
-logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
-st.image(logo, width=250)
-# st.write(f"**{filtro_agente}**")
-st.divider()
+    filtro_agente = st.selectbox('Agente', tabela_parceiros['Nome Validador'])
 
 # TABELA EMISSOES
 tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]
@@ -90,19 +89,19 @@ total_receber = total_comissoes - contabilidade - imposto
 st.markdown('''
 <style>
 .small-font-light {
-    font-size: 14px !important;
+    font-size: 16px !important;
     font-weight: light;
     text-align: center;
 }
             
 .small-font-bold {
-    font-size: 14px !important;
+    font-size: 16px !important;
     font-weight: bold;
     text-align: center;
 }
             
 .sub-header {
-    font-size:18px !important;
+    font-size:20px !important;
     font-weight: bold;
     text-align: center;
 }
@@ -139,6 +138,8 @@ col9.markdown('<p class="small-font-light">R$ {:,.2f}</p>'.format(tabela_validac
 col10.markdown('<p class="small-font-light">R$ {:,.2f}</p>'.format(tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum()), unsafe_allow_html=True)
 col11.markdown('<p class="small-font-light">R$ {:,.2f}</p>'.format(tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()), unsafe_allow_html=True)
 col12.markdown('<p class="small-font-light">R$ {:,.2f}</p>'.format(total_comissoes_validacoes), unsafe_allow_html=True)
+
+st.divider()
 
 # CONSOLIDADO VENDAS
 st.markdown('<p class="sub-header color-green">VENDAS DE CERTIFICADOS</p>', unsafe_allow_html=True)

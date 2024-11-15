@@ -11,6 +11,7 @@ colunas_parceiros = ['Nome Vendedor',
                      '% Hardware',
                      'E-MAIL']
 tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=colunas_parceiros)
+tabela_parceiros = pd.DataFrame(tabela_parceiros)
 
 # Pegar dados da planilha Validacoes.xlsx
 colunas_validacoes = ['Desc. Agente Val.',
@@ -38,7 +39,7 @@ colunas_vendas = ['Nome Vendedor',
 tabela_vendas = pd.read_excel('./dados/012024-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
 tabela_vendas.index = range(1, len(tabela_vendas)+1)
 
-nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Desc. Agente Val.'].to_dict()
+nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')
 tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_apelido)
 
 # tabela_vendas.set_index("Nome Vendedor", inplace=True)
@@ -46,14 +47,6 @@ tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_
 # Pegar dados de tabela de Repasses
 tabela_repasses = pd.read_excel('dados/Repasses.xlsx')
 # print(tabela_repasses)
-
-#SIDEBAR
-# filtro_agente = st.sidebar.selectbox("Agente", tabela_parceiros["Nome Validador"])
-
-logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
-st.image(logo, width=250)
-# st.write(f"**{filtro_agente}**")
-st.divider()
 
 # TABELA EMISSOES
 tabela_validacoes_col_oculta = tabela_validacoes #[tabela_validacoes['Nome Validador'] == filtro_agente]

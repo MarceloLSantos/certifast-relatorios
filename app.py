@@ -22,8 +22,6 @@ with st.sidebar:
     mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
     ano = data.year
 
-    st.write(mes, ano)
-
 if st.session_state.data:
     mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
     ano = data.year

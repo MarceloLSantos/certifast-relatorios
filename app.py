@@ -95,9 +95,11 @@ if st.session_state.data:
     # tabela_vendas_col_oculta.reset_index()
 
     total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
-    contabilidade = 0 if tabela_parceiros['COMISSAO'] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
+    contabilidade = 0 #0 if tabela_parceiros['COMISSAO'] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
     imposto = total_comissoes * tabela_repasses["Valor"][0]
     total_receber = total_comissoes - contabilidade - imposto
+
+    st.write(tabela_parceiros['COMISSAO'])
 
     st.markdown('''
     <style>

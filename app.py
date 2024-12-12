@@ -10,7 +10,7 @@ colunas_parceiros = ['Nome Vendedor',
                      '% Software',
                      '% Hardware',
                      'E-MAIL']
-tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name='Parceiros', thousands=".", decimal=',', usecols=colunas_parceiros)
+tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_parceiros)
 
 #SIDEBAR
 with st.sidebar:
@@ -45,7 +45,7 @@ if st.session_state.data:
                         'Val. Bruto Hard',
                         'Val. Comiss. Soft',
                         'Val. Comiss. Hard']
-    tabela_validacoes = pd.read_excel(f'./dados/{mes}{ano}-Validacoes.xlsx', sheet_name='AR CERTIFAST (QUEIROZ E MANTO', thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
+    tabela_validacoes = pd.read_excel(f'./dados/{mes}{ano}-Validacoes.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
     tabela_validacoes.rename(columns={'Desc. Agente Val.': 'Nome Validador'}, inplace = True)
 
     # Mescla com tabela parceiros para calcular percentuais de comissões
@@ -73,7 +73,7 @@ if st.session_state.data:
                     'Desc.Produto',
                     'Val. Faturamento',
                     'Valor Tot. Comiss.']
-    tabela_vendas = pd.read_excel(f'./dados/{mes}{ano}-Revenda.xlsx', sheet_name='CCR CAMPANHA - AR Certifast -', decimal=',', usecols=colunas_vendas, parse_dates=True)
+    tabela_vendas = pd.read_excel(f'./dados/{mes}{ano}-Revenda.xlsx', sheet_name=0, decimal=',', usecols=colunas_vendas, parse_dates=True)
     tabela_vendas.index = range(1, len(tabela_vendas)+1)
 
     nome_to_apelido = tabela_parceiros.set_index('Nome Vendedor')['Nome Validador'].to_dict()

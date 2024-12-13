@@ -43,6 +43,7 @@ if st.session_state.data:
                         'Val. Bruto Hard',
                         'Val. Comiss. Soft',
                         'Val. Comiss. Hard']
+
     tabela_validacoes = pd.read_excel(f'./dados/{mes}{ano}-Validacoes.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
     tabela_validacoes.rename(columns={'Desc. Agente Val.': 'Nome Validador'}, inplace = True)
 

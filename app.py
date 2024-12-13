@@ -55,6 +55,7 @@ if st.session_state.data:
                     'Valor Tot. Comiss.']
 
     try:
+        # Tenta ler os arquivos
         tabela_validacoes = pd.read_excel(f'./dados/{mes}{ano}-Validacoes.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
         tabela_vendas = pd.read_excel(f'./dados/{mes}{ano}-Revenda.xlsx', sheet_name=0, decimal=',', usecols=colunas_vendas, parse_dates=True)
     except:

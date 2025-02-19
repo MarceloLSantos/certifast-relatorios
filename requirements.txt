@@ -1,3 +1,5 @@
+json
+requests
 streamlit
 pandas
 openpyxl

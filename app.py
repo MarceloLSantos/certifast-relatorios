@@ -1,6 +1,49 @@
+import json
+import requests
 import streamlit as st
 import pandas as pd
-import functions as fnc
+
+def formatarMoeda(valor=0):
+    # return format(valor, '.2f')
+    return format(valor, '_.2f').replace(".",",").replace("_",".")
+
+def formatarPercentual(valor):
+    return format(valor, '_.2f').replace(".",",").replace("_",".")
+def autenticar_usuario(username, password):
+    # URL da API PHP
+    url = "https://sistema.certifast.com.br/api/autenticar/"
+
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'My Python API Script'
+    }
+    # Dados a serem enviados para a API
+    data = {
+    'username': username,
+    'password': password,
+    'api_python': 'certifast@api-python'
+    }
+    data_json = json.dumps(data)
+
+    # Fazendo a requisição POST para a API
+    response = requests.post(url, data_json, headers=headers)
+
+    # Verificando a resposta da API
+    if response.status_code == 200:
+        resultado = json.loads(response.text)
+        st.session_state.nivel_acesso = int(resultado['id_nivel_acesso'])
+        st.session_state.nome = resultado['nome_usuario']
+        st.session_state.codrev = resultado['cod_rev']
+        st.session_state.id_usuario = resultado['id_usuario']
+        return resultado
+    else:
+        return False
+    
+def log_out():
+    for key in st.session_state.keys():
+        del st.session_state[key]
+    st.session_state["logged_in"] = False
+    st.success("Deslogado com sucesso")
 
 st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
@@ -28,7 +71,7 @@ with st.sidebar:
         st.text_input("Senha", key="password", type="password")
 
         if st.button("Login", key="login"):
-            resultado = fnc.autenticar_usuario(st.session_state.username, st.session_state.password)
+            resultado = autenticar_usuario(st.session_state.username, st.session_state.password)
             if resultado:
                 st.session_state.logged_in = True
                 st.rerun()
@@ -45,7 +88,7 @@ with st.sidebar:
 
         filtro_agente = st.selectbox('Agente', opcoes, key='filtro_agente')
         data = st.date_input('Data', key='data')
-        st.button("Logout", key="logout", on_click=fnc.log_out)
+        st.button("Logout", key="logout", on_click=log_out)
         
 if st.session_state.logged_in == True:
     mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month

@@ -1,5 +1,5 @@
 import json
-# import requests
+import requests
 import streamlit as st
 import pandas as pd
 
@@ -26,19 +26,18 @@ def autenticar_usuario(username, password):
     data_json = json.dumps(data)
 
     # Fazendo a requisição POST para a API
-    # response = requests.post(url, data_json, headers=headers)
+    response = requests.post(url, data_json, headers=headers)
 
     # Verificando a resposta da API
-    # if response.status_code == 200:
-    #     resultado = json.loads(response.text)
-    #     st.session_state.nivel_acesso = int(resultado['id_nivel_acesso'])
-    #     st.session_state.nome = resultado['nome_usuario']
-    #     st.session_state.codrev = resultado['cod_rev']
-    #     st.session_state.id_usuario = resultado['id_usuario']
-    #     return resultado
-    # else:
-    #     return False
-    pass
+    if response.status_code == 200:
+        resultado = json.loads(response.text)
+        st.session_state.nivel_acesso = int(resultado['id_nivel_acesso'])
+        st.session_state.nome = resultado['nome_usuario']
+        st.session_state.codrev = resultado['cod_rev']
+        st.session_state.id_usuario = resultado['id_usuario']
+        return resultado
+    else:
+        return False
     
 def log_out():
     for key in st.session_state.keys():

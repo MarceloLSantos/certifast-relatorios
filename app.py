@@ -85,7 +85,7 @@ with st.sidebar:
             opcoes = tabela_parceiros['Nome Validador'].unique()
             # adicionar o elemento 'TODOS' ao final da lista
             opcoes = opcoes.tolist()
-            opcoes.append('TODOS')
+            opcoes.append('CONSOLIDADO')
         else:
             opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
 

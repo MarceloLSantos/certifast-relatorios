@@ -4,6 +4,7 @@ import requests
 import streamlit as st
 import pandas as pd
 
+
 def formatarMoeda(valor=0):
     return format(valor, '_.2f').replace(".",",").replace("_",".")
 

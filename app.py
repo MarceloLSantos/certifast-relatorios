@@ -106,7 +106,7 @@ with st.sidebar:
         st.button("Logout", key="logout", on_click=log_out)
         
 if st.session_state.logged_in == True:
-    if st.session_state.filtro_agente != 'TODOS':
+    if st.session_state.filtro_agente != 'CONSOLIDADO':
         mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
         ano = data.year
 

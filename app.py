@@ -1,3 +1,4 @@
+import datetime
 import json
 import requests
 import streamlit as st
@@ -87,7 +88,19 @@ with st.sidebar:
             opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
 
         filtro_agente = st.selectbox('Agente', opcoes, key='filtro_agente')
-        data = st.date_input('Data', key='data')
+        # Obtém a data atual
+        hoje = datetime.date.today()
+
+        # Calcula o primeiro dia do mês anterior
+        if hoje.month == 1:
+            primeiro_dia_mes_anterior = datetime.date(hoje.year - 1, 12, 1)
+        else:
+            primeiro_dia_mes_anterior = datetime.date(hoje.year, hoje.month - 1, 1)
+
+        # Define o valor padrão do st.date_input
+        data_padrao = primeiro_dia_mes_anterior
+
+        data = st.date_input('Data', key='data', value=data_padrao)
         st.button("Logout", key="logout", on_click=log_out)
         
 if st.session_state.logged_in == True:

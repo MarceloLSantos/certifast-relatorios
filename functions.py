@@ -47,11 +47,6 @@ def exibe_login():
                 st.error("Usuário ou senha inválidos.")
 
 def autenticar_usuario(username, password):
-    # acesso = 1
-    # st.session_state.nivel_acesso = acesso
-    # st.session_state.nome = 'Fulano de Tal'
-    # return True
-
     # URL da API PHP
     url = "https://sistema.certifast.com.br/api/autenticar/"
 
@@ -73,14 +68,10 @@ def autenticar_usuario(username, password):
     # Verificando a resposta da API
     if response.status_code == 200:
         resultado = json.loads(response.text)
-        st.session_state.nivel_acesso = int(resultado['nivel_acesso'])
+        st.session_state.nivel_acesso = int(resultado['id_nivel_acesso'])
         st.session_state.nome = resultado['nome_usuario']
-        st.session_state.comissao = resultado['percentual_comissao']
+        st.session_state.codrev = resultado['cod_rev']
         st.session_state.id_usuario = resultado['id_usuario']
-        if st.session_state.nivel_acesso == 1:
-            st.session_state.editar_pedido = True
-        else:
-            st.session_state.editar_pedido = False
         return resultado
     else:
         return False

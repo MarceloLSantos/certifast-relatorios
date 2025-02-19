@@ -1,15 +1,18 @@
 import streamlit as st
 import pandas as pd
+import functions as fnc
 
 st.set_page_config(page_title="CERTIFAST - RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 # Pegar dados de Parceiros
 colunas_parceiros = ['Nome Vendedor',
                      'Nome Validador',
-                     'COMISSAO','% Venda',
+                     'COMISSAO',
+                     '% Venda',
                      '% Software',
                      '% Hardware',
-                     'E-MAIL']
+                     'E-MAIL',
+                     'CODREV']
 tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_parceiros)
 
 #SIDEBAR
@@ -17,14 +20,40 @@ with st.sidebar:
     logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
     st.image(logo, width=250)
 
-    filtro_agente = st.selectbox('Agente', tabela_parceiros['Nome Validador'])
-    data = st.date_input('Data', key='data')
+    if 'logged_in' not in st.session_state:
+        st.session_state.logged_in = False
+    
+    if st.session_state.logged_in == False:
+        st.text_input("E-mail", key="username")
+        st.text_input("Senha", key="password", type="password")
+
+        if st.button("Login", key="login"):
+            resultado = fnc.autenticar_usuario(st.session_state.username, st.session_state.password)
+            if resultado:
+                st.session_state.logged_in = True
+                st.rerun()
+            else:
+                st.error("Usuário ou senha inválidos.")
+
+    if st.session_state.logged_in == True:
+        st.title("CERTIFAST - RELATÓRIOS")
+
+        if st.session_state.nivel_acesso == 1:
+            opcoes = tabela_parceiros['Nome Validador'].unique()
+        else:
+            opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
+
+        filtro_agente = st.selectbox('Agente', opcoes, key='filtro_agente')
+        data = st.date_input('Data', key='data')
+        st.button("Logout", key="logout", on_click=fnc.log_out)
+        
+if st.session_state.logged_in == True:
     mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
     ano = data.year
 
-if st.session_state.data:
-    mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
-    ano = data.year
+    if st.session_state.data:
+        mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
+        ano = data.year
 
     pasta = './dados/'
     arquivo_revenda = f'{mes}{ano}-Revenda.xlsx'

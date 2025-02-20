@@ -178,6 +178,8 @@ if st.session_state.logged_in == True:
     if st.session_state.filtro_agente == 'CONSOLIDADO':
         # Exibir uma lista com todos os 'Nome Validador'
         opcoes = tabela_parceiros['Nome Validador'].unique()
+
+        df = pd.DataFrame()
        
         # Criar um loop para exibir os 'Nome Validador'
         for opcao in opcoes:
@@ -198,9 +200,9 @@ if st.session_state.logged_in == True:
             imposto = total_comissoes * tabela_repasses["Valor"][0]
             total_receber = total_comissoes - contabilidade - imposto
 
-            # Criar um dataframe com opces e total_receber
-            df = pd.DataFrame({'Nome Validador': [opcao], 'Total a Receber': [total_receber]})
-
+            # Adicionar ao dataframe pces e total_receber de cada iteração
+            df = pd.concat([df, pd.DataFrame({'Nome Validador': [opcao],
+                                            'Total a Receber': [total_receber]})], ignore_index=True)
         # Exibir o dataframe
         st.dataframe(df.style.format({'Total a Receber': 'R$ {:,.2f}'}))
 

@@ -176,8 +176,22 @@ if st.session_state.logged_in == True:
     tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
     if st.session_state.filtro_agente == 'CONSOLIDADO':
-        # TABELA EMISSOES
-        pass
+        # Exibir um dataframe contendo o Nome Validador e o total_receber
+        total_comissoes_validacoes = tabela_validacoes["Val. Comiss. Soft"].sum() + tabela_validacoes["Val. Comiss. Hard"].sum()
+        total_comissoes_vendas = tabela_vendas["Valor Tot. Comiss."].sum()
+        total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
+
+        # Exibir um dataframe contendo o Nome Validador e o total_receber
+        tabela_validacoes_col_oculta = tabela_validacoes.drop(columns='Nome Validador')
+        tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
+
+        # Exibir um dataframe contendo o Nome Vendedor e o total_receber
+        tabela_vendas_col_oculta = tabela_vendas.drop(columns='Nome Vendedor')
+        tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
+
+        st.markdown("**EXTRATO DE EMISSÕES**")
+        st.dataframe(tabela_validacoes_col_oculta, use_container_width=True)
+        st.divider()
     else:
         # TABELA EMISSOES
         tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]

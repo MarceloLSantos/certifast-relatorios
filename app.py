@@ -183,13 +183,13 @@ if st.session_state.logged_in == True:
        
         # TABELA EMISSOES
         tabela_validacoes_col_oculta = tabela_validacoes
-        tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
+        # tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
         total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
         tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
 
         # TABELA VENDAS
         tabela_vendas_col_oculta = tabela_vendas
-        tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
+        # tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
         total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
         tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 

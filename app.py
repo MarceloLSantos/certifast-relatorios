@@ -183,19 +183,30 @@ if st.session_state.logged_in == True:
         for opcao in opcoes:
             st.write(opcao)
         
-        # # TABELA EMISSOES
-        # tabela_validacoes_col_oculta = tabela_validacoes
-        # tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
-        # total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
-        # tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
+            # TABELA EMISSOES
+            tabela_validacoes_col_oculta = tabela_validacoes
+            tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
+            total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
+            tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
 
-        # # TABELA VENDAS
-        # tabela_vendas_col_oculta = tabela_vendas
-        # tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
-        # total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
-        # tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
+            # TABELA VENDAS
+            tabela_vendas_col_oculta = tabela_vendas
+            tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
+            total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
+            tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
-        # total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
+            total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
+
+            # Criar um alista com o total de comissões de cada agente
+            lista_total_comissoes = []
+            lista_total_comissoes.append(total_comissoes)
+
+        # Transformar opcoes em um dataframe
+        df_opcoes = pd.DataFrame(opcoes, columns=['Agente'])
+        df_opcoes['Total Comissão'] = lista_total_comissoes
+
+        # Exibir o dataframe
+        st.write(df_opcoes)
        
     else:
         # TABELA EMISSOES

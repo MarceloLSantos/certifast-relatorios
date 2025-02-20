@@ -176,13 +176,11 @@ if st.session_state.logged_in == True:
     tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
     if st.session_state.filtro_agente == 'CONSOLIDADO':
-        # Exibir uma lista com todos os 'Nome Validador'
-        opcoes = tabela_parceiros['Nome Validador'].unique()
+        # Criar opcoes como um dataframe
+        opcoes = pd.DataFrame(opcoes, columns=['Nome Validador'])
         
         # Criar um loop para exibir os 'Nome Validador'
         for opcao in opcoes:
-            st.write(opcao)
-        
             # TABELA EMISSOES
             tabela_validacoes_col_oculta = tabela_validacoes
             tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
@@ -202,11 +200,13 @@ if st.session_state.logged_in == True:
             lista_total_comissoes.append(total_comissoes)
 
         # Transformar opcoes em um dataframe
-        df_opcoes = pd.DataFrame(opcoes, columns=['Agente'])
+        # df_opcoes = pd.DataFrame(opcoes, columns=['Agente'], index=range(1, len(opcoes)+1))
+
+        # Adicionar a coluna 'Total Comissão' 
         # df_opcoes['Total Comissão'] = lista_total_comissoes
 
         # Exibir o dataframe
-        st.write(df_opcoes)
+        st.write(opcoes)
        
     else:
         # TABELA EMISSOES

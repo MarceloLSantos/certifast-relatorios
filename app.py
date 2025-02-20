@@ -177,6 +177,7 @@ if st.session_state.logged_in == True:
 
     if st.session_state.filtro_agente == 'CONSOLIDADO':
         # TABELA EMISSOES
+        pass
     else:
         # TABELA EMISSOES
         tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]

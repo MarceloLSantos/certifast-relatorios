@@ -203,7 +203,7 @@ if st.session_state.logged_in == True:
 
         # Transformar opcoes em um dataframe
         df_opcoes = pd.DataFrame(opcoes, columns=['Agente'])
-        df_opcoes['Total Comissão'] = lista_total_comissoes
+        # df_opcoes['Total Comissão'] = lista_total_comissoes
 
         # Exibir o dataframe
         st.write(df_opcoes)

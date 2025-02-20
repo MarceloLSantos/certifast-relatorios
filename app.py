@@ -194,7 +194,7 @@ if st.session_state.logged_in == True:
             tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
             total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
-            contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == filtro_agente].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
+            contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
             imposto = total_comissoes * tabela_repasses["Valor"][0]
             total_receber = total_comissoes - contabilidade - imposto
 

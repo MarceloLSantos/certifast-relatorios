@@ -175,7 +175,9 @@ if st.session_state.logged_in == True:
     # Pegar dados da planilha Repasses.xlsx
     tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
-    if st.session_state.filtro_agente != 'CONSOLIDADO':
+    if st.session_state.filtro_agente == 'CONSOLIDADO':
+        # TABELA EMISSOES
+    else:
         # TABELA EMISSOES
         tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]
         tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')

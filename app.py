@@ -203,6 +203,9 @@ if st.session_state.logged_in == True:
             # Adicionar ao dataframe pces e total_receber de cada iteração
             df = pd.concat([df, pd.DataFrame({'Nome Validador': [opcao],
                                             'Total a Receber': [total_receber]})], ignore_index=True)
+        # Configurar o dataframe pra ser exibido wide
+        df = df.set_index('Nome Validador')
+
         # Exibir o dataframe
         st.dataframe(df.style.format({'Total a Receber': 'R$ {:,.2f}'}))
 

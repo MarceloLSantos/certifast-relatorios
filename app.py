@@ -200,9 +200,10 @@ if st.session_state.logged_in == True:
 
             # Criar um dataframe com opces e total_receber
             df = pd.DataFrame({'Nome Validador': [opcao], 'Total a Receber': [total_receber]})
-            df.index = range(1, len(df)+1)
-            st.dataframe(df, use_container_width=True)
-            
+
+        # Exibir o dataframe
+        st.dataframe(df, use_container_width=True)
+
             
        
     else:

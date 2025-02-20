@@ -187,7 +187,7 @@ if st.session_state.logged_in == True:
         tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
         total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
-        st.write(tabela_validacoes_col_oculta)
+        st.write(total_comissoes)
     else:
         # TABELA EMISSOES
         tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]

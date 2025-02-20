@@ -204,10 +204,8 @@ if st.session_state.logged_in == True:
             df_total_comissoes['Total Comissões'] = df_total_comissoes['Total Comissões'].map(lambda x: formatarMoeda(x))
             df_total_comissoes.index = range(1, len(df_total_comissoes)+1)
 
-            # Exibir o dataframe com o total de comissões de cada agente
-            col1, col2 = st.columns(2)
-            col1.dataframe(df_total_comissoes.style.format({'Total Comissões': 'R$ {:,.2f}'}), use_container_width=True)
-            col2.markdown('<p class="small-font-bold">R$ {:,.2f}</p>'.format(total_comissoes), unsafe_allow_html=True)
+        # Exibir o dataframe com o total de comissões de cada agente
+        st.write(df_total_comissoes)
        
     else:
         # TABELA EMISSOES

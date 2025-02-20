@@ -202,7 +202,7 @@ if st.session_state.logged_in == True:
             df = pd.DataFrame({'Nome Validador': [opcao], 'Total a Receber': [total_receber]})
 
         # Exibir o dataframe
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df.style.format({'Total a Receber': 'R$ {:,.2f}'}))
 
             
        

@@ -176,22 +176,18 @@ if st.session_state.logged_in == True:
     tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
     if st.session_state.filtro_agente == 'CONSOLIDADO':
-        # Exibir um dataframe contendo o Nome Validador e o total_receber
-        total_comissoes_validacoes = tabela_validacoes["Val. Comiss. Soft"].sum() + tabela_validacoes["Val. Comiss. Hard"].sum()
-        total_comissoes_vendas = tabela_vendas["Valor Tot. Comiss."].sum()
-        total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
-
-        # Exibir um dataframe contendo o Nome Validador e o total_receber
+        # Exibir dataframe com todos os Nome Validador
         tabela_validacoes_col_oculta = tabela_validacoes.drop(columns='Nome Validador')
+        total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
         tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
 
-        # Exibir um dataframe contendo o Nome Vendedor e o total_receber
+        # Exibir dataframe com todos os Nome Vendedor
         tabela_vendas_col_oculta = tabela_vendas.drop(columns='Nome Vendedor')
+        total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
         tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
-        st.markdown("**EXTRATO DE EMISSÕES**")
-        st.dataframe(tabela_validacoes_col_oculta, use_container_width=True)
-        st.divider()
+        total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
+        st.write(tabela_validacoes_col_oculta)
     else:
         # TABELA EMISSOES
         tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]

@@ -194,18 +194,16 @@ if st.session_state.logged_in == True:
             tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
             total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
+            contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == filtro_agente].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
+            imposto = total_comissoes * tabela_repasses["Valor"][0]
+            total_receber = total_comissoes - contabilidade - imposto
 
-            # Criar um alista com o total de comissões de cada agente
-            lista_total_comissoes = []
-            lista_total_comissoes.append(total_comissoes)
-
-            # Criar um dataframe com opces e total de comissões
-            df_total_comissoes = pd.DataFrame(list(zip(opcoes, lista_total_comissoes)), columns=['Nome Validador', 'Total Comissões'])
-            df_total_comissoes['Total Comissões'] = df_total_comissoes['Total Comissões'].map(lambda x: formatarMoeda(x))
-            df_total_comissoes.index = range(1, len(df_total_comissoes)+1)
-
-        # Exibir o dataframe com o total de comissões de cada agente
-        st.write(df_total_comissoes)
+            # Criar um dataframe com opces e total_receber
+            df = pd.DataFrame({'Nome Validador': [opcao], 'Total a Receber': [total_receber]})
+            df.index = range(1, len(df)+1)
+            st.dataframe(df, use_container_width=True)
+            
+            
        
     else:
         # TABELA EMISSOES

@@ -147,7 +147,7 @@ if st.session_state.logged_in == True:
             tabela_validacoes = pd.read_excel(f'./dados/{mes}{ano}-Validacoes.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_validacoes, parse_dates=True)
             tabela_vendas = pd.read_excel(f'./dados/{mes}{ano}-Revenda.xlsx', sheet_name=0, decimal=',', usecols=colunas_vendas, parse_dates=True)
         except:
-            st.error('ARQUIVO NÃO ENCONTRADO!')
+            st.error('RELATÓRIO NÃO DISPONÍVEL')
             st.stop()
 
         tabela_validacoes.rename(columns={'Desc. Agente Val.': 'Nome Validador'}, inplace = True)

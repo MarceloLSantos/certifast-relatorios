@@ -181,20 +181,20 @@ if st.session_state.logged_in == True:
 
         df = pd.DataFrame()
        
+        # TABELA EMISSOES
+        tabela_validacoes_col_oculta = tabela_validacoes
+        tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
+        total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
+        tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
+
+        # TABELA VENDAS
+        tabela_vendas_col_oculta = tabela_vendas
+        tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
+        total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
+        tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
+
         # Criar um loop para exibir os 'Nome Validador'
         for opcao in opcoes:
-            # TABELA EMISSOES
-            tabela_validacoes_col_oculta = tabela_validacoes
-            tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
-            total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
-            tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
-
-            # TABELA VENDAS
-            tabela_vendas_col_oculta = tabela_vendas
-            tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
-            total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
-            tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
-
             total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
             contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
             imposto = total_comissoes * tabela_repasses["Valor"][0]
@@ -203,7 +203,7 @@ if st.session_state.logged_in == True:
             # Adicionar ao dataframe pces e total_receber de cada iteração
             df = pd.concat([df, pd.DataFrame({'Nome Validador': [opcao],
                                             'Total a Receber': [total_receber]})], ignore_index=True)
-        # Configurar o dataframe pra ser exibido wide
+        # Definir o 'Nome Validador' como o index do dataframe
         df = df.set_index('Nome Validador')
 
         # Exibir o dataframe

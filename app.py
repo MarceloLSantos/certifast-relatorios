@@ -237,15 +237,16 @@ if st.session_state.logged_in == True:
             imposto = total_comissoes * tabela_repasses["Valor"][0]
             total_receber = total_comissoes - contabilidade - imposto
 
-            df_pagamentos = pd.concat([df_pagamentos, pd.DataFrame({'Agente': [opcao],
-                                                                    'Faixa': [tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0]],
-                                                                    'Qtde Vendas': [len(tabela_vendas_col_oculta)],
-                                                                    'Qtde Validações': [len(tabela_validacoes_col_oculta)],
-                                                                    'Comissão Vendas': [total_comissoes_vendas],
-                                                                    'Comissão Validações': [total_comissoes_validacoes],
-                                                                    'Contabilidade': [contabilidade],
-                                                                    'Imposto': [imposto],
-                                                                    'Total a receber': [total_receber]})], ignore_index=True)
+            if total_receber > 0:
+                df_pagamentos = pd.concat([df_pagamentos, pd.DataFrame({'Agente': [opcao],
+                                                                        'Faixa': [tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0]],
+                                                                        'Qtde Vendas': [len(tabela_vendas_col_oculta)],
+                                                                        'Qtde Validações': [len(tabela_validacoes_col_oculta)],
+                                                                        'Comissão Vendas': [total_comissoes_vendas],
+                                                                        'Comissão Validações': [total_comissoes_validacoes],
+                                                                        'Contabilidade': [contabilidade],
+                                                                        'Imposto': [imposto],
+                                                                        'Total a receber': [total_receber]})], ignore_index=True)
 
         #Redefine indice incremental
         df_pagamentos.index = range(1, len(df_pagamentos)+1)

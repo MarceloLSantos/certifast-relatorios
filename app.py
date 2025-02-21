@@ -247,9 +247,8 @@ if st.session_state.logged_in == True:
                                                                     'Imposto': [imposto],
                                                                     'Total a receber': [total_receber]})], ignore_index=True)
 
-        #Definir a coluna 'Agente' como index
-
-        df_pagamentos = df_pagamentos.set_index()
+        #Redefine indice incremental
+        df_pagamentos.index = range(1, len(df_pagamentos)+1)
         st.dataframe(df_pagamentos.style.format({'Comissão Vendas': 'R$ {:,.2f}',
                                                             'Comissão Validações': 'R$ {:,.2f}',
                                                             'Comissão Total': 'R$ {:,.2f}',

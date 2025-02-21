@@ -237,7 +237,7 @@ if st.session_state.logged_in == True:
             imposto = total_comissoes * tabela_repasses["Valor"][0]
             total_receber = total_comissoes - contabilidade - imposto
 
-            if total_receber != 0:
+            if total_receber > 0 or total_receber < 0:
                 df_pagamentos = pd.concat([df_pagamentos, pd.DataFrame({'Agente': [opcao],
                                                                         'Faixa': [tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0]],
                                                                         'Qtde Vendas': [len(tabela_vendas_col_oculta)],

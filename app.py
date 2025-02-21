@@ -78,34 +78,34 @@ with st.sidebar:
             else:
                 st.error("Usuário ou senha inválidos.")
 
-if st.session_state.logged_in == True:
-    st.title("CERTIFAST RELATÓRIOS")
+    if st.session_state.logged_in == True:
+        st.title("RELATÓRIOS")
 
-    if st.session_state.nivel_acesso == 1:
-        opcoes = tabela_parceiros['Nome Validador'].unique()
-        # adicionar o elemento 'TODOS' ao final da lista
-        opcoes = opcoes.tolist()
-        opcoes.insert(0, 'CONSOLIDADO')
-    else:
-        opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
+        if st.session_state.nivel_acesso == 1:
+            opcoes = tabela_parceiros['Nome Validador'].unique()
+            # adicionar o elemento 'TODOS' ao final da lista
+            opcoes = opcoes.tolist()
+            opcoes.insert(0, 'CONSOLIDADO')
+        else:
+            opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
 
-    filtro_agente = st.selectbox('Agente', opcoes, key='filtro_agente')
-    # Obtém a data atual
-    hoje = datetime.date.today()
+        filtro_agente = st.selectbox('Agente', opcoes, key='filtro_agente')
+        # Obtém a data atual
+        hoje = datetime.date.today()
 
-    # Calcula o primeiro dia do mês anterior
-    if hoje.month == 1:
-        primeiro_dia_mes_anterior = datetime.date(hoje.year - 1, 12, 1)
-    else:
-        primeiro_dia_mes_anterior = datetime.date(hoje.year, hoje.month - 1, 1)
+        # Calcula o primeiro dia do mês anterior
+        if hoje.month == 1:
+            primeiro_dia_mes_anterior = datetime.date(hoje.year - 1, 12, 1)
+        else:
+            primeiro_dia_mes_anterior = datetime.date(hoje.year, hoje.month - 1, 1)
 
-    # Define o valor padrão do st.date_input
-    data_padrao = primeiro_dia_mes_anterior
+        # Define o valor padrão do st.date_input
+        data_padrao = primeiro_dia_mes_anterior
 
-    data = st.date_input('Data', key='data', value=data_padrao)
-    st.button("Logout", key="logout", on_click=log_out)
+        data = st.date_input('Data', key='data', value=data_padrao)
+        st.button("Logout", key="logout", on_click=log_out)
         
-# if st.session_state.logged_in == True:
+if st.session_state.logged_in == True:
     mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
     ano = data.year
 

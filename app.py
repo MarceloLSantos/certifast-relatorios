@@ -1,5 +1,6 @@
 import datetime
 import json
+from tkinter import Image
 import requests
 import streamlit as st
 import pandas as pd
@@ -45,7 +46,8 @@ def log_out():
     st.session_state["logged_in"] = False
     st.success("Deslogado com sucesso")
 
-st.set_page_config(page_title="CERTIFAST RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
+im = Image.open("https://certifast.com.br/img/favicon-certificado-digital-32x32.png")
+st.set_page_config(page_title="CERTIFAST RELATÓRIOS", page_icon=im, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 # Pegar dados de Parceiros
 colunas_parceiros = ['Nome Vendedor',

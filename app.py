@@ -249,7 +249,7 @@ if st.session_state.logged_in == True:
 
         #Definir a coluna 'Agente' como index
 
-        df_pagamentos = df_pagamentos.set_index('Agente')
+        df_pagamentos = df_pagamentos.set_index()
         st.dataframe(df_pagamentos.style.format({'Comissão Vendas': 'R$ {:,.2f}',
                                                             'Comissão Validações': 'R$ {:,.2f}',
                                                             'Comissão Total': 'R$ {:,.2f}',

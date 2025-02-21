@@ -175,76 +175,84 @@ if st.session_state.logged_in == True:
     # Pegar dados da planilha Repasses.xlsx
     tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
+    st.markdown('''
+    <style>
+    .small-font-light {
+        font-size: 18px !important;
+        font-weight: light;
+        text-align: center;
+    }
+                
+    .small-font-bold {
+        font-size: 18px !important;
+        font-weight: bold;
+        text-align: center;
+    }
+                
+    .sub-header {
+        font-size:22px !important;
+        font-weight: bold;
+        text-align: center;
+    }
+                
+    .color-green {
+        color: #00bb00;
+    }
+                
+    .color-blue {
+        color: #0000bb;
+    }
+                
+    .color-red {
+        color: #dd0000;
+    }
+    </style>
+    ''', unsafe_allow_html=True)
+
+
     if st.session_state.filtro_agente == 'CONSOLIDADO':
-        # Exibir uma lista com todos os 'Nome Validador'
         opcoes = tabela_parceiros['Nome Validador'].unique()
 
-        df = pd.DataFrame()
-       
-        # TABELA EMISSOES
-        tabela_validacoes_col_oculta = tabela_validacoes
-        # tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
-        # total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
-        # tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
+        # Definir um dataframe vazio df_pagamentos para armazenar os pagamentos consolidados
+        df_pagamentos = pd.DataFrame()
 
-        # TABELA VENDAS
-        tabela_vendas_col_oculta = tabela_vendas
-        # tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
-        # total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
-        # tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
+        # CONSOLIDADO EMISSOES
+        st.markdown('<p class="sub-header color-blue">CONSOLIDADO DE PAGAMENTOS</p>', unsafe_allow_html=True)
 
-        # Criar um loop para exibir os 'Nome Validador'
-        # for opcao in opcoes:
-        #     total_comissoes_validacoes = tabela_validacoes_col_oculta.groupby('Nome Validador')["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta.groupby('Nome Validador')["Val. Comiss. Hard"].sum()
+        for opcao in opcoes:
+            # TABELA EMISSOES
+            tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == opcao]
+            tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns='Nome Validador')
+            total_comissoes_validacoes = tabela_validacoes_col_oculta["Val. Comiss. Soft"].sum() + tabela_validacoes_col_oculta["Val. Comiss. Hard"].sum()
+            tabela_validacoes_col_oculta.index = range(1, len(tabela_validacoes_col_oculta)+1)
 
-        #     # Supondo que seu DataFrame se chame tabela_vendas
-        #     total_comissoes_vendas = tabela_vendas_col_oculta.groupby('Nome Vendedor')['Valor Tot. Comiss.'].sum().reset_index()
+            # TABELA VENDAS
+            tabela_vendas_col_oculta = tabela_vendas[tabela_vendas['Nome Vendedor'] == opcao]
+            tabela_vendas_col_oculta = tabela_vendas_col_oculta.drop(columns='Nome Vendedor')
+            total_comissoes_vendas = tabela_vendas_col_oculta["Valor Tot. Comiss."].sum()
+            tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
-        #     total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
-        #     contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
-        #     imposto = total_comissoes * tabela_repasses["Valor"][0]
-        #     total_receber = total_comissoes - contabilidade - imposto
+            total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
+            contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
+            imposto = total_comissoes * tabela_repasses["Valor"][0]
+            total_receber = total_comissoes - contabilidade - imposto
 
-        #     # Adicionar ao dataframe pces e total_receber de cada iteração
-        #     df = pd.concat([df, pd.DataFrame({'Nome Agente': [opcao],
-        #                                     'Total a Receber': [total_receber]})], ignore_index=True)
+            df_pagamentos = pd.concat([df_pagamentos, pd.DataFrame({'Agente': [opcao],
+                                                                    'Faixa': [tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0]],
+                                                                    'Qtde Vendas': [len(tabela_vendas_col_oculta)],
+                                                                    'Qtde Validações': [len(tabela_validacoes_col_oculta)],
+                                                                    'Comissão Vendas': [total_comissoes_vendas],
+                                                                    'Comissão Validações': [total_comissoes_validacoes],
+                                                                    'Contabilidade': [contabilidade],
+                                                                    'Imposto': [imposto],
+                                                                    'Total a receber': [total_receber]})], ignore_index=True)
 
-        # Calcular as comissões de vendas por vendedor
-        comissoes_vendas = tabela_vendas_col_oculta.groupby('Nome Vendedor')['Valor Tot. Comiss.'].sum()
-
-        # Calcular o total de comissões de validações por vendedor
-        tabela_validacoes['Total Comiss. Validação'] = tabela_validacoes['Val. Comiss. Soft'] + tabela_validacoes['Val. Comiss. Hard']
-        comissoes_validacoes = tabela_validacoes.groupby('Nome Validador')['Total Comiss. Validação'].sum()
-
-        # Combinar as comissões
-        total_comissoes = comissoes_vendas.add(comissoes_validacoes, fill_value=0)
-
-        # Criar o DataFrame final
-        df_final = pd.DataFrame({'Nome Agente': total_comissoes.index, 'Total a Receber': total_comissoes.values})
-
-        # Calcular o imposto
-        imposto_taxa = tabela_repasses["Valor"][0]
-        df_final['Imposto'] = df_final['Total a Receber'] * imposto_taxa
-
-        # Mesclar os DataFrames para obter os valores de contabilidade
-        df_final = pd.merge(df_final, tabela_parceiros[['Nome Vendedor', 'COMISSAO']], left_on='Nome Agente', right_on='Nome Vendedor', how='left')
-
-        # Calcular a contabilidade
-        contabilidade_valor = tabela_repasses["Valor"][1]
-        df_final['Contabilidade'] = df_final.apply(lambda row: 0 if row['COMISSAO'] == 'REVENDEDOR 10' else contabilidade_valor, axis=1)
-
-        # Subtrair imposto e contabilidade do total a receber
-        df_final['Total a Receber'] = df_final['Total a Receber'] - df_final['Imposto'] - df_final['Contabilidade']
-
-        # Remover colunas redundantes
-        df_final.drop(['Nome Vendedor'], axis=1, inplace=True)
-
-        # Exibir o DataFrame
-        st.dataframe(df_final.style.format({'Total a Receber': 'R$ {:,.2f}'}))
-        
-
-            
-       
+        st.dataframe(df_pagamentos.style.format({'Comissão Vendas': 'R$ {:,.2f}',
+                                                            'Comissão Validações': 'R$ {:,.2f}',
+                                                            'Comissão Total': 'R$ {:,.2f}',
+                                                            'Contabilidade': 'R$ {:,.2f}',
+                                                            'Imposto': 'R$ {:,.2f}',
+                                                            'Total a receber': 'R$ {:,.2f}'}))
     else:
         # TABELA EMISSOES
         tabela_validacoes_col_oculta = tabela_validacoes[tabela_validacoes['Nome Validador'] == filtro_agente]
@@ -262,40 +270,6 @@ if st.session_state.logged_in == True:
         contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == filtro_agente].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
         imposto = total_comissoes * tabela_repasses["Valor"][0]
         total_receber = total_comissoes - contabilidade - imposto
-
-        st.markdown('''
-        <style>
-        .small-font-light {
-            font-size: 18px !important;
-            font-weight: light;
-            text-align: center;
-        }
-                    
-        .small-font-bold {
-            font-size: 18px !important;
-            font-weight: bold;
-            text-align: center;
-        }
-                    
-        .sub-header {
-            font-size:22px !important;
-            font-weight: bold;
-            text-align: center;
-        }
-                    
-        .color-green {
-            color: #00bb00;
-        }
-                    
-        .color-blue {
-            color: #0000bb;
-        }
-                    
-        .color-red {
-            color: #dd0000;
-        }
-        </style>
-        ''', unsafe_allow_html=True)
 
         # CONSOLIDADO EMISSOES
         st.markdown('<p class="sub-header color-blue">VALIDAÇÕES DE SOFTWARE E HARDWARE</p>', unsafe_allow_html=True)
@@ -350,6 +324,8 @@ if st.session_state.logged_in == True:
 
         st.divider()
         st.markdown("**EXTRATO DE EMISSÕES**")
+        #Dropar colunas 'COMISSÃO' e 'CODREV'
+        tabela_validacoes_col_oculta = tabela_validacoes_col_oculta.drop(columns=['COMISSAO', 'CODREV'])
         st.dataframe(tabela_validacoes_col_oculta.style.format({'Val. Bruto Soft': 'R$ {:,.2f}',
                                                                 'Val. Bruto Hard': 'R$ {:,.2f}',
                                                                 'Val. Comiss. Soft': 'R$ {:,.2f}',

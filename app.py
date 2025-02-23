@@ -179,21 +179,19 @@ if st.session_state.logged_in == True:
 
             # st.session_state.files_vendas_e_validacoes = []
             st.success('VENDAS E VALIDAÇÕES ENVIADASCOM SUCESSO')
-
-            def excluir_arquivo(arquivo):
-                os.remove(f'./dados/{arquivo}')
-                st.success(f'Arquivo {arquivo} excluído com sucesso')
-
-            # Listar todos os arquivos excel da pasta dados e permitir o usuário escolher qual deseja excluir
-            arquivos = os.listdir('./dados')
-            arquivos = [arquivo for arquivo in arquivos if arquivo.endswith('.xlsx')]
-
-            st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)
-            arquivo_selecionado = st.selectbox('Selecione o arquivo para excluir', arquivos, key='arquivo_selecionado')
-            st.button("Excluir", key="excluir", on_click=excluir_arquivo, args=(arquivo_selecionado,))
-
-
             st.stop()
+
+        def excluir_arquivo(arquivo):
+            os.remove(f'./dados/{arquivo}')
+            st.success(f'Arquivo {arquivo} excluído com sucesso')
+
+        # Listar todos os arquivos excel da pasta dados e permitir o usuário escolher qual deseja excluir
+        arquivos = os.listdir('./dados')
+        arquivos = [arquivo for arquivo in arquivos if arquivo.endswith('.xlsx')]
+
+        st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)
+        arquivo_selecionado = st.selectbox('Selecione o arquivo para excluir', arquivos, key='arquivo_selecionado')
+        st.button("Excluir", key="excluir", on_click=excluir_arquivo, args=(arquivo_selecionado,))
 
     if st.session_state.filtro_agente in opcoes and st.session_state.filtro_agente != 'UPLOAD':
         mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month

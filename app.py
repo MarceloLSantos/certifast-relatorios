@@ -157,6 +157,8 @@ if st.session_state.logged_in == True:
         arquivos = os.listdir('./dados')
         # Listar arquivos que iniciem com valor numérico e terminem com extensão .xlsx
         arquivos = [arquivo for arquivo in arquivos if arquivo.startswith(tuple(string.digits)) and arquivo.endswith('.xlsx')]
+        # Ordenar em ordem alfabetica
+        arquivos.sort()
         st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)
         arquivo_selecionado = st.selectbox('Selecione o arquivo para excluir', arquivos, key='arquivo_selecionado')
         st.button("Excluir", key="excluir", on_click=excluir_arquivo, args=(arquivo_selecionado,))

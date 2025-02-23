@@ -187,7 +187,6 @@ if st.session_state.logged_in == True:
             # Listar todos os arquivos excel da pasta dados e permitir o usuário escolher qual deseja excluir
             arquivos = os.listdir('./dados')
             arquivos = [arquivo for arquivo in arquivos if arquivo.endswith('.xlsx')]
-            arquivos = [arquivo for arquivo in arquivos if 'R-' in arquivo or 'V-' in arquivo]
 
             st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)
             arquivo_selecionado = st.selectbox('Selecione o arquivo para excluir', arquivos, key='arquivo_selecionado')

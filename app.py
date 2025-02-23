@@ -155,7 +155,7 @@ if st.session_state.logged_in == True:
         # O arquivo V-MMAA.xlsx deve somente ser amrazenado na pasta dados com o formato MMYYY-Validacoes.xlsx
         # O arquivo R-MMAA.xlsx deve somente ser amrazenado na pasta dados com o formato MMYYY-Revenda.xlsx
         # Não será necessário upload nem de repasses nem de parceiros
-
+        st.divider()
         if st.session_state.files_vendas_e_validacoes:
             for file in st.session_state.files_vendas_e_validacoes:
                 # if file.name.startswith('V-') and file.name.endswith('.xlsx') or file.name.startswith('R-') and file.name.endswith('.xlsx'):
@@ -180,7 +180,7 @@ if st.session_state.logged_in == True:
 
             # st.session_state.files_vendas_e_validacoes = []
             st.success('VENDAS E VALIDAÇÕES ENVIADASCOM SUCESSO')
-            st.divider()
+
             st.stop()
 
         def excluir_arquivo(arquivo):

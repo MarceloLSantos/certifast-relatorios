@@ -180,6 +180,7 @@ if st.session_state.logged_in == True:
 
             # st.session_state.files_vendas_e_validacoes = []
             st.success('VENDAS E VALIDAÇÕES ENVIADASCOM SUCESSO')
+            st.divider()
             st.stop()
 
         def excluir_arquivo(arquivo):

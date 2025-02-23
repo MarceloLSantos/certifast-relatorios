@@ -160,6 +160,7 @@ if st.session_state.logged_in == True:
         st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)
         arquivo_selecionado = st.selectbox('Selecione o arquivo para excluir', arquivos, key='arquivo_selecionado')
         st.button("Excluir", key="excluir", on_click=excluir_arquivo, args=(arquivo_selecionado,))
+        st.stop()
 
     if st.session_state.filtro_agente == 'UPLOAD':
         # Inserir opção de upload de arquivos do tipo excel

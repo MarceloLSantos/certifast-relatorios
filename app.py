@@ -123,7 +123,8 @@ with st.sidebar:
             opcoes = opcoes.tolist()
             opcoes.insert(0, 'CONSOLIDADO')
             opcoes.insert(1, 'UPLOAD')
-            opcoes.insert(2, '++++++++++++++++++++++')
+            opcoes.insert(2, 'DELETAR')
+            opcoes.insert(3, '++++++++++++++++++++++')
             
         else:
             opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
@@ -146,6 +147,20 @@ with st.sidebar:
         st.button("Logout", key="logout", on_click=log_out)
         
 if st.session_state.logged_in == True:
+    # deletar arquivos
+    if st.session_state.filtro_agente == 'DELETAR':
+        def excluir_arquivo(arquivo):
+            os.remove(f'./dados/{arquivo}')
+            st.success(f'Arquivo {arquivo} excluído com sucesso')
+
+        # Listar todos os arquivos excel da pasta dados e permitir o usuário escolher qual deseja excluir
+        arquivos = os.listdir('./dados')
+        # Listar arquivos que iniciem com valor numérico e terminem com extensão .xlsx
+        arquivos = [arquivo for arquivo in arquivos if arquivo.startswith(tuple(string.digits)) and arquivo.endswith('.xlsx')]
+        st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)
+        arquivo_selecionado = st.selectbox('Selecione o arquivo para excluir', arquivos, key='arquivo_selecionado')
+        st.button("Excluir", key="excluir", on_click=excluir_arquivo, args=(arquivo_selecionado,))
+
     if st.session_state.filtro_agente == 'UPLOAD':
         # Inserir opção de upload de arquivos do tipo excel
         st.markdown('<p class="sub-header color-blue">UPLOAD DE VENDAS E VALIDAÇÕES</p>', unsafe_allow_html=True)
@@ -155,7 +170,7 @@ if st.session_state.logged_in == True:
         # O arquivo V-MMAA.xlsx deve somente ser amrazenado na pasta dados com o formato MMYYY-Validacoes.xlsx
         # O arquivo R-MMAA.xlsx deve somente ser amrazenado na pasta dados com o formato MMYYY-Revenda.xlsx
         # Não será necessário upload nem de repasses nem de parceiros
-        st.divider()
+
         if st.session_state.files_vendas_e_validacoes:
             for file in st.session_state.files_vendas_e_validacoes:
                 # if file.name.startswith('V-') and file.name.endswith('.xlsx') or file.name.startswith('R-') and file.name.endswith('.xlsx'):
@@ -180,20 +195,7 @@ if st.session_state.logged_in == True:
 
             # st.session_state.files_vendas_e_validacoes = []
             st.success('VENDAS E VALIDAÇÕES ENVIADASCOM SUCESSO')
-
             st.stop()
-
-        def excluir_arquivo(arquivo):
-            os.remove(f'./dados/{arquivo}')
-            st.success(f'Arquivo {arquivo} excluído com sucesso')
-
-        # Listar todos os arquivos excel da pasta dados e permitir o usuário escolher qual deseja excluir
-        arquivos = os.listdir('./dados')
-        # Listar arquivos que iniciem com valor numérico e terminem com extensão .xlsx
-        arquivos = [arquivo for arquivo in arquivos if arquivo.startswith(tuple(string.digits)) and arquivo.endswith('.xlsx')]
-        st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)
-        arquivo_selecionado = st.selectbox('Selecione o arquivo para excluir', arquivos, key='arquivo_selecionado')
-        st.button("Excluir", key="excluir", on_click=excluir_arquivo, args=(arquivo_selecionado,))
 
     if st.session_state.filtro_agente in opcoes and st.session_state.filtro_agente != 'UPLOAD':
         mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month

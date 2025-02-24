@@ -146,6 +146,7 @@ with st.sidebar:
         
         try:
             tabela_parceiros = pd.read_excel(f'./dados/Parceiros-{mes}{ano}.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_parceiros)
+            st.session_state.forcar_upload = False
         except:
             st.error(f'DADOS NÃO DISPONÍVEIS')
             st.session_state.forcar_upload = True
@@ -172,7 +173,7 @@ if st.session_state.logged_in == True:
         # Listar todos os arquivos excel da pasta dados e permitir o usuário escolher qual deseja excluir
         arquivos = os.listdir('./dados')
         # Listar arquivos que iniciem com valor numérico e terminem com extensão .xlsx
-        arquivos = [arquivo for arquivo in arquivos if arquivo.startswith(tuple(string.digits)) and arquivo.endswith('.xlsx')]
+        arquivos = [arquivo for arquivo in arquivos if arquivo.endswith('.xlsx')]
         # Ordenar em ordem alfabetica
         arquivos.sort()
         st.markdown('<p class="sub-header color-blue">EXCLUIR ARQUIVOS</p>', unsafe_allow_html=True)

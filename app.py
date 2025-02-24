@@ -2,12 +2,9 @@ import datetime
 import json
 import os
 import string
-from dotenv import load_dotenv
 import requests
 import streamlit as st
 import pandas as pd
-
-load_dotenv()
 
 def formatarMoeda(valor=0):
     return format(valor, '_.2f').replace(".",",").replace("_",".")

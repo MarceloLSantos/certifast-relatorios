@@ -86,6 +86,9 @@ st.markdown('''
 
 #SIDEBAR
 with st.sidebar:
+    if 'forcar_upload' not in st.session_state:
+        st.session_state.forcar_upload = False
+
     logo = 'https://certifast.com.br/img/home/novo/certifast-logo.png'
     st.image(logo, width=250)
 
@@ -108,6 +111,10 @@ with st.sidebar:
         st.markdown(f"#### Olá, {st.session_state.nome}")
         st.divider()
 
+        if st.session_state.nivel_acesso == 1:
+            opcoes_arquivos = ['RELATÓRIOS', 'UPLOAD', 'DELETAR']
+            filtro_arquivos = st.selectbox('OPÇÕES', opcoes_arquivos, key='filtro_arquivos')
+            
         # Obtém a data atual
         hoje = datetime.date.today()
 
@@ -141,13 +148,9 @@ with st.sidebar:
             tabela_parceiros = pd.read_excel(f'./dados/Parceiros-{mes}{ano}.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_parceiros)
         except:
             st.error(f'DADOS NÃO DISPONÍVEIS')
-            # st.stop()
+            st.session_state.forcar_upload = True
 
-        if st.session_state.nivel_acesso == 1:
-            opcoes_arquivos = ['RELATÓRIOS', 'UPLOAD', 'DELETAR']
-            filtro_arquivos = st.selectbox('OPÇÕES', opcoes_arquivos, key='filtro_arquivos')
-
-        if st.session_state.filtro_arquivos == 'RELATÓRIOS':
+        if st.session_state.filtro_arquivos == 'RELATÓRIOS' and st.session_state.forcar_upload == False:
             if st.session_state.nivel_acesso == 1:
                 opcoes = tabela_parceiros['Nome Validador'].unique()
                 opcoes = opcoes.tolist()
@@ -177,7 +180,7 @@ if st.session_state.logged_in == True:
         st.button("Excluir", key="excluir", on_click=excluir_arquivo, args=(arquivo_selecionado,))
         st.stop()
 
-    if st.session_state.filtro_arquivos == 'UPLOAD':
+    if st.session_state.filtro_arquivos == 'UPLOAD' and st.session_state.forcar_upload == True:
         # Inserir opção de upload de arquivos do tipo excel
         st.markdown('<p class="sub-header color-blue">UPLOAD DE VENDAS E VALIDAÇÕES</p>', unsafe_allow_html=True)
         st.error('OBS: ENVIE OS ARQUIVOS DE VENDAS E VALIDAÇÕES NO FORMATO R-MMAAAA.xlsx E V-MMAAAA.xlsx')
@@ -214,9 +217,10 @@ if st.session_state.logged_in == True:
 
             # st.session_state.files_vendas_e_validacoes = []
             st.success('ARQUIVOS ENVIADOS COM SUCESSO')
+            st.session_state.forcar_upload = False
         st.stop()
 
-    if st.session_state.filtro_arquivos == 'RELATÓRIOS':
+    if st.session_state.filtro_arquivos == 'RELATÓRIOS' and st.session_state.forcar_upload == False:
         if st.session_state.filtro_agente in opcoes:
             mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
             ano = data.year

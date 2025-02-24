@@ -2,9 +2,12 @@ import datetime
 import json
 import os
 import string
+from dotenv import load_dotenv
 import requests
 import streamlit as st
 import pandas as pd
+
+load_dotenv()
 
 def formatarMoeda(valor=0):
     return format(valor, '_.2f').replace(".",",").replace("_",".")
@@ -49,17 +52,6 @@ def log_out():
 
 st.set_page_config(page_title="CERTIFAST RELATÓRIOS", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
-# Pegar dados de Parceiros
-colunas_parceiros = ['Nome Vendedor',
-                     'Nome Validador',
-                     'COMISSAO',
-                     '% Venda',
-                     '% Software',
-                     '% Hardware',
-                     'E-MAIL',
-                     'CODREV']
-tabela_parceiros = pd.read_excel('./dados/Parceiros.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_parceiros)
-
 # Formatações
 st.markdown('''
             <style>
@@ -97,7 +89,7 @@ st.markdown('''
 
 #SIDEBAR
 with st.sidebar:
-    logo = "https://certifast.com.br/img/home/novo/certifast-logo.png"
+    logo = 'https://certifast.com.br/img/home/novo/certifast-logo.png'
     st.image(logo, width=250)
 
     if 'logged_in' not in st.session_state:
@@ -116,20 +108,9 @@ with st.sidebar:
                 st.error("Usuário ou senha inválidos.")
 
     if st.session_state.logged_in == True:
-        st.title("Olá, " + st.session_state.nome)
+        st.markdown(f"#### Olá, {st.session_state.nome}")
+        st.divider()
 
-        if st.session_state.nivel_acesso == 1:
-            opcoes = tabela_parceiros['Nome Validador'].unique()
-            opcoes = opcoes.tolist()
-            opcoes.insert(0, 'CONSOLIDADO')
-            opcoes.insert(1, 'UPLOAD')
-            opcoes.insert(2, 'DELETAR')
-            opcoes.insert(3, '++++++++++++++++++++++')
-            
-        else:
-            opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
-
-        filtro_agente = st.selectbox('Agente', opcoes, key='filtro_agente')
         # Obtém a data atual
         hoje = datetime.date.today()
 
@@ -142,7 +123,41 @@ with st.sidebar:
         # Define o valor padrão do st.date_input
         data_padrao = primeiro_dia_mes_anterior
 
-        data = st.date_input('Data', key='data', value=data_padrao)
+        data = st.date_input('DATA', key='data', value=data_padrao)
+        mes = format(data.month, '02') if len(str(data.month)) == 1 else data.month
+        ano = data.year
+
+        # Pegar dados de Parceiros
+        colunas_parceiros = ['Nome Vendedor',
+                            'Nome Validador',
+                            'COMISSAO',
+                            '% Venda',
+                            '% Software',
+                            '% Hardware',
+                            'E-MAIL',
+                            'CODREV',
+                            'Imposto',
+                            'Contabilidade',
+                            'Verificação']
+        
+        try:
+            tabela_parceiros = pd.read_excel(f'./dados/Parceiros-{mes}{ano}.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_parceiros)
+        except:
+            st.error(f'DADOS NÃO DISPONÍVEIS')
+            st.stop()
+
+        if st.session_state.nivel_acesso == 1:
+            opcoes = tabela_parceiros['Nome Validador'].unique()
+            opcoes = opcoes.tolist()
+            opcoes.insert(0, 'CONSOLIDADO')
+            opcoes.insert(1, 'UPLOAD')
+            opcoes.insert(2, 'DELETAR')
+            opcoes.insert(3, '++++++++++++++++++++++')
+            
+        else:
+            opcoes = tabela_parceiros[tabela_parceiros['CODREV'] == int(st.session_state.codrev)]['Nome Validador'].unique()
+
+        filtro_agente = st.selectbox('OPÇÕES', opcoes, key='filtro_agente')
 
         st.button("Logout", key="logout", on_click=log_out)
         
@@ -170,9 +185,6 @@ if st.session_state.logged_in == True:
         st.error('OBS: ENVIE OS ARQUIVOS DE VENDAS E VALIDAÇÕES NO FORMATO R-MMAAAA.xlsx E V-MMAAAA.xlsx')
         # As planilhas são enviadas em um unico file_uploader com nome no formato V-mmyy e R-mmyy
         st.file_uploader('Arraste os arquivos excel para esta área', accept_multiple_files=True, type=['xlsx'], key='files_vendas_e_validacoes')
-        # O arquivo V-MMAA.xlsx deve somente ser amrazenado na pasta dados com o formato MMYYY-Validacoes.xlsx
-        # O arquivo R-MMAA.xlsx deve somente ser amrazenado na pasta dados com o formato MMYYY-Revenda.xlsx
-        # Não será necessário upload nem de repasses nem de parceiros
 
         if st.session_state.files_vendas_e_validacoes:
             for file in st.session_state.files_vendas_e_validacoes:
@@ -194,10 +206,16 @@ if st.session_state.logged_in == True:
                     # Verificar se o arquivo ja esiste e deletar se existir
                     if os.path.exists(f'./dados/{mes}{ano}-Revenda.xlsx'):
                         os.remove(f'./dados/{mes}{ano}-Revenda.xlsx')
-                    os.rename(f'./dados/{file.name}', f'./dados/{mes}{ano}-Revenda.xlsx')                        
+                    os.rename(f'./dados/{file.name}', f'./dados/{mes}{ano}-Revenda.xlsx')
+
+                if file.name.startswith('P-'):
+                    #Verificar se o arquivo ja esiste e deletar se existir
+                    if os.path.exists(f'./dados/Parceiros-{mes}{ano}.xlsx'):
+                        os.remove(f'./dados/Parceiros-{mes}{ano}.xlsx')
+                    os.rename(f'./dados/{file.name}', f'./dados/Parceiros-{mes}{ano}.xlsx')                        
 
             # st.session_state.files_vendas_e_validacoes = []
-            st.success('VENDAS E VALIDAÇÕES ENVIADASCOM SUCESSO')
+            st.success('ARQUIVOS ENVIADOS COM SUCESSO')
             st.stop()
 
     if st.session_state.filtro_agente in opcoes and st.session_state.filtro_agente != 'UPLOAD':
@@ -211,8 +229,8 @@ if st.session_state.logged_in == True:
         pasta = './dados/'
         arquivo_revenda = f'{mes}{ano}-Revenda.xlsx'
         arquivo_validacoes = f'{mes}{ano}-Validacoes.xlsx'
-        arquivo_repasses = 'Repasses.xlsx'
-        arquivo_parceiros = 'Parceiros.xlsx'
+        # arquivo_repasses = 'Repasses.xlsx'
+        arquivo_parceiros = f'Parceiros-{mes}{ano}.xlsx'
         
         # Pegar dados da planilha Validacoes.xlsx
         colunas_validacoes = ['Desc. Agente Val.',
@@ -265,7 +283,7 @@ if st.session_state.logged_in == True:
             tabela_vendas['Nome Vendedor'] = tabela_vendas['Nome Vendedor'].replace(nome_to_apelido)
 
             # Pegar dados da planilha Repasses.xlsx
-            tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
+            # tabela_repasses = pd.read_excel('./dados/Repasses.xlsx', decimal=',')
 
             if st.session_state.filtro_agente == 'CONSOLIDADO':
                 opcoes = tabela_parceiros['Nome Validador'].unique()
@@ -290,8 +308,13 @@ if st.session_state.logged_in == True:
                     tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
                     total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
-                    contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
-                    imposto = total_comissoes * tabela_repasses["Valor"][0]
+
+                    # NÃO EXISTEM MAIS tabela_repasses
+                    # Criar variavel contabilidade que deve conter o valor da coluna 'Contabilidade' da tabela_parceiros onde o Nome Validador seja igual ao opcao
+                    contabilidade = tabela_parceiros['Contabilidade'][tabela_parceiros['Nome Validador'] == opcao].values[0]
+                
+                    # contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == opcao].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
+                    imposto = total_comissoes * tabela_parceiros['Imposto'][tabela_parceiros['Nome Validador'] == opcao].values[0]
                     total_receber = total_comissoes - contabilidade - imposto
 
                     if total_receber > 0 or total_receber < 0:
@@ -327,8 +350,10 @@ if st.session_state.logged_in == True:
                 tabela_vendas_col_oculta.index = range(1, len(tabela_vendas_col_oculta)+1)
 
                 total_comissoes = total_comissoes_validacoes + total_comissoes_vendas
-                contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == filtro_agente].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
-                imposto = total_comissoes * tabela_repasses["Valor"][0]
+                contabilidade = tabela_parceiros['Contabilidade'][tabela_parceiros['Nome Validador'] == filtro_agente].values[0]
+
+                # contabilidade = 0 if tabela_parceiros['COMISSAO'][tabela_parceiros['Nome Validador'] == filtro_agente].values[0] == 'REVENDEDOR 10' else tabela_repasses["Valor"][1]
+                imposto = total_comissoes * tabela_parceiros['Imposto'][tabela_parceiros['Nome Validador'] == filtro_agente].values[0]
                 total_receber = total_comissoes - contabilidade - imposto
 
                 # CONSOLIDADO EMISSOES

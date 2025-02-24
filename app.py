@@ -141,7 +141,7 @@ with st.sidebar:
             tabela_parceiros = pd.read_excel(f'./dados/Parceiros-{mes}{ano}.xlsx', sheet_name=0, thousands=".", decimal=',', usecols=colunas_parceiros)
         except:
             st.error(f'DADOS NÃO DISPONÍVEIS')
-            st.stop()
+            # st.stop()
 
         if st.session_state.nivel_acesso == 1:
             opcoes_arquivos = ['RELATÓRIOS', 'UPLOAD', 'DELETAR']

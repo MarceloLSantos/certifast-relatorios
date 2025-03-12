@@ -151,6 +151,9 @@ with st.sidebar:
             st.error(f'DADOS NÃO DISPONÍVEIS')
             st.session_state.forcar_upload = True
 
+        if 'filtro_arquivos' not in st.session_state:
+            st.session_state.filtro_arquivos = 'RELATÓRIOS'
+        
         if st.session_state.filtro_arquivos == 'RELATÓRIOS' and st.session_state.forcar_upload == False:
             if st.session_state.nivel_acesso == 1:
                 opcoes = tabela_parceiros['Nome Validador'].unique()

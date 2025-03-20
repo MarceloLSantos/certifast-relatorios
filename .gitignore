@@ -163,4 +163,4 @@ cython_debug/
 #.idea/
 .DS_Store
 app.bat
-dados/
+dados/*.xlsx
